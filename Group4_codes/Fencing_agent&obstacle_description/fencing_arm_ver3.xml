@@ -1,0 +1,278 @@
+<mujoco model="Fencing_arm_description3.0">
+  <compiler angle="radian" inertiafromgeom="true"/>
+
+  <option timestep="0.002" integrator="RK4" gravity="0 0 -9.81"/>
+  
+  <visual>
+    <headlight diffuse="1 1 1" active="1"/>
+  </visual>
+
+  <asset>
+    <mesh name="base_link" file="meshes/base_link.STL"/>
+    <mesh name="link0" file="meshes/link0.STL"/>
+    <mesh name="link1" file="meshes/link1.STL"/>
+    <mesh name="link2" file="meshes/link2.STL"/>
+    <mesh name="link3" file="meshes/link3.STL"/>
+    <mesh name="link4" file="meshes/link4.STL"/>
+    <mesh name="link5" file="meshes/link5.STL"/>
+    <mesh name="link6" file="meshes/link6.STL"/>
+    <mesh name="link7" file="meshes/link7.STL"/>
+    <mesh name="link01" file="meshes/link01.STL"/>
+    <mesh name="link02" file="meshes/link02.STL"/>
+    <mesh name="link03" file="meshes/link03.STL"/>
+    <mesh name="link04" file="meshes/link04.STL"/>
+<texture name="grid" type="2d" builtin="checker" rgb1="0.1 0.1 0.1" rgb2="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="grid" texture="grid" texrepeat="2 2" reflectance="0.2"/>
+    </asset>
+
+    <!-- Default parameters / 默认参数设置 -->
+  <default>
+    <joint limited="false" damping="1" armature="0.1" frictionloss="0.1"/>
+    <geom contype="1" conaffinity="1" friction="2 0.5 0.001"/>
+    <motor ctrlrange="-1 1" ctrllimited="true"/>
+  </default>
+
+  <worldbody>
+    <geom name="ground" type="plane" size="0 0 0.1" pos="0 0 -0.2" material="grid" friction = "1 0.05 0.001"/> 
+    <light directional="true" pos="0 0 3" dir="0 0 -1"/>
+    
+    <!-- Agent robot body / 机器人代理本体 -->
+    
+    <body name="base_link_agent" pos="2 0 0.1">
+    <!-- slide改为x轴，limited range -5 5是相对于其初始pos的，需调整 -->
+      <joint name="slide_x_agent" type="slide" axis="1 0 0" range="-3 3" limited="true" damping="500"/> 
+      <inertial mass="477.18" pos="0 0 0.69005" diaginertia="50.0 50.0 30.0"/>
+      <geom type="mesh" contype="17" conaffinity="24" group="1" density="0" rgba="0.8 0.2 0.2 1" mesh="base_link"/>
+      <geom type="mesh" rgba="0.8 0.2 0.2 1" mesh="base_link"/>
+      <!-- Body site for base reference / 基座参考用的 site -->
+      <site name="key_site_agent" pos="0 0 0" size="0.01" rgba="0 1 0 1" type="sphere"/>
+      
+      <!-- Add full body definition for link0 / 为 link0 添加完整 body 定义 -->
+      <body name="link0_agent" pos="-0.3 0 1" quat="0.495629 -0.504331 0.504333 -0.495631">
+        <geom type="mesh" contype="18" conaffinity="24" group="1" density="0" rgba="0.76863 0.74902 0.72941 1" mesh="link0"/>
+        <geom type="mesh" rgba="0.768627 0.74902 0.729412 1" mesh="link0"/>
+        
+        <!-- link1 is child of link0; links 1–7 follow Franka Panda / link1作为link0的子体；link1～7取自 Franka Panda -->     
+        <body name="link1_agent" pos="0 0 0" quat="1 0 0 0">
+          <inertial pos="0.0119457 0.010524 -0.237182" quat="-0.606188 0.213073 0.674449 0.363668" mass="0.807638" diaginertia="0.001581 0.006519 0.006672"/>
+          <joint name="joint1_agent" pos="0 0 0" axis="0 0 1" range="-3.14 3.14" limited="true" damping="8"/>
+          <geom type="mesh" contype="18" conaffinity="24" rgba="0.792157 0.819608 0.933333 1" mesh="link1"/>
+
+          <body name="link2_agent" pos="0.095985 0.084721 -0.33006" quat="0.696965 -0.550676 0.443573 -0.119323">
+            <inertial pos="0.0401727 0.0721568 -0.146432" quat="0.571137 0.641765 0.289696 0.421919" mass="0.997394" diaginertia="0.001746 0.008257 0.008302"/>
+            <joint name="joint2_agent" pos="0 0 0" axis="0 0 1" range="-2.0 2.0" limited="true" damping="8"/>
+            <geom type="mesh" contype="18" conaffinity="24" rgba="0.792157 0.819608 0.933333 1" mesh="link2"/>
+            <body name="link3_agent" pos="0.14623 0.26169 -0.12803" quat="0.601287 -0.343558 0.618036 0.372093">
+              <inertial pos="-0.0384723 -0.0165653 -0.0312365" quat="0.903155 0.073969 0.412860 0.091578" mass="0.695462" diaginertia="0.001116 0.003690 0.003709"/>
+              <joint name="joint3_agent" pos="0 0 0" axis="0 0 -1" range="-2.5 2.5" limited="true" damping="6"/>
+              <geom type="mesh" contype="18" conaffinity="24" rgba="0.792157 0.819608 0.933333 1" mesh="link3"/>
+              <body name="link4_agent" pos="-0.0825 0.10162 0.019058" quat="-0.40676 0.406755 -0.578404 -0.578399">
+                <inertial pos="-0.0546266 -0.0258059 -0.083502" quat="0.971082 0.027741 -0.105972 0.212132" mass="0.788121" diaginertia="0.001208 0.004290 0.004318"/>
+                <joint name="joint4_agent" pos="0 0 0" axis="0 0 -1" range="-2.0 2.0" limited="true" damping="6"/>
+                <geom type="mesh" contype="18" conaffinity="24" rgba="0.792157 0.819608 0.933333 1" mesh="link4"/>
+                <body name="link5_agent" pos="-0.043804 -0.073358 -0.10152" quat="0.126867 0.703939 -0.0668617 0.695632">
+                  <inertial pos="-0.00622206 0.0645374 -0.263644" quat="0.703851 0.135681 -0.693583 -0.071608" mass="0.304109" diaginertia="0.000430 0.002743 0.002969"/>
+                  <joint name="joint5_agent" pos="0 0 0" axis="0 0 1" range="-2.8 2.8" limited="true" damping="4"/>
+                  <geom type="mesh" contype="18" conaffinity="24" rgba="0.792157 0.819608 0.933333 1" mesh="link5"/>
+                  <body name="link6_agent" pos="-0.011814 0.12606 -0.34311" quat="0.0330072 0.0330074 -0.706337 -0.706335">
+                    <inertial pos="-0.064034 -0.00953132 -0.135025" quat="0.998633 0.010357 0.019789 0.047264" mass="0.230988" diaginertia="0.000236 0.000413 0.000524"/>
+                    <joint name="joint6_agent" pos="0 0 0" axis="0 0 1" range="-3.14 3.14" limited="true" damping="2"/>
+                    <geom type="mesh" contype="18" conaffinity="24" rgba="0.25098 0.25098 0.25098 1" mesh="link6"/>
+                    <body name="link7_agent" pos="-0.087521 -0.11808 -0.12661" quat="0.034765 0.0313796 0.706411 -0.70625">
+                      <inertial pos="-0.00611647 -0.00297294 0.0528661" quat="-0.389105 0.596933 -0.379503 -0.590123" mass="0.277615" diaginertia="0.000252 0.001165 0.001195"/>
+                      <joint name="joint7_agent" pos="0 0 0" axis="0 0 1" range="-2.96 2.96" limited="true" damping="2"/>
+                      <geom type="mesh" contype="18" conaffinity="24" rgba="1 1 1 1" mesh="link7"/>
+                      
+                      <body name="tip8_agent" pos="0 0 0.35">
+                        <!-- Sword tip body; site for world pose queries / 剑尖 body；site 用于查询世界坐标 (data.site_xpos) -->
+                          <geom name="tip8_geom_agent" contype="4" conaffinity="3" type="sphere" size="0.005" pos="0 0 0" rgba="0 1 0 1"/>
+                          <site name="tip8_agent" pos="0 0 0" size="0.01" rgba="0 1 0 1"/>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Wheel joints also need damping / 轮子关节也需要阻尼 -->
+      <body name="link01_agent" pos="0.175 -0.3 -0.125" quat="0.499998 0.5 0.5 -0.500002">
+        <inertial pos="0 0 -0.075" quat="1.000000 -0.000000 0.000000 0.000000" mass="7.36311" diaginertia="0.042568 0.042568 0.057524"/>
+        <joint name="joint01_agent" pos="0 0 0" axis="0 0 -1" limited="false" damping="0.5"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="link01"/>
+      </body>
+      <body name="link02_agent" pos="0.175 0.3 -0.125" quat="0.499998 0.5 0.5 -0.500002">
+        <inertial pos="0 0 -0.075" quat="1.000000 -0.000000 0.000000 0.000000" mass="7.36311" diaginertia="0.042568 0.042568 0.057524"/>
+        <joint name="joint02_agent" pos="0 0 0" axis="0 0 -1" limited="false" damping="0.5"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="link02"/>
+      </body>
+      <body name="link03_agent" pos="-0.175 0.3 -0.125" quat="0.499998 0.5 0.5 -0.500002">
+        <inertial pos="0 0 -0.075" quat="1.000000 -0.000000 0.000000 0.000000" mass="7.36311" diaginertia="0.042568 0.042568 0.057524"/>
+        <joint name="joint03_agent" pos="0 0 0" axis="0 0 1" limited="false" damping="0.5"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="link03"/>
+      </body>
+      <body name="link04_agent" pos="-0.175 -0.15 -0.125" quat="0.499998 0.5 0.5 -0.500002">
+        <inertial pos="0 0 0.075" quat="1.000000 -0.000000 0.000000 0.000000" mass="7.36311" diaginertia="0.042568 0.042568 0.057524"/>
+        <joint name="joint04_agent" pos="0 0 0" axis="0 0 1" limited="false" damping="0.5"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="link04"/>
+      </body>
+    </body>
+
+    <!-- obstacle robot body / 机器人障碍本体 -->
+
+    <body name="base_link_obstacle" pos="-2 0 0.1" quat="0 0 0 1">
+    <!-- slide改为x轴 -->
+      <joint name="slide_x_obstacle" type="slide" axis="1 0 0" range="-0.2 0.2" limited="true" damping="500"/> 
+      <inertial mass="477.18" pos="0 0 0.69005" diaginertia="50.0 50.0 30.0"/>
+      <geom type="mesh" contype="17" conaffinity="20" group="1" density="0" rgba="0.2 0.2 0.8 1" mesh="base_link"/>
+      <geom type="mesh" rgba="0.2 0.2 0.8 1" mesh="base_link"/>
+      <!-- Body site for base reference / 基座参考用的 site -->
+      <site name="key_site_obstacle" pos="0 0 0" size="0.01" rgba="0 1 0 1" type="sphere"/>
+      
+      <!-- Add full body definition for link0 / 为 link0 添加完整 body 定义 -->
+      <body name="link0_obstacle" pos="-0.3 0 1" quat="0.495629 -0.504331 0.504333 -0.495631">
+        <geom type="mesh" contype="18" conaffinity="20" group="1" density="0" rgba="0.76863 0.74902 0.72941 1" mesh="link0"/>
+        <geom type="mesh" rgba="0.768627 0.74902 0.729412 1" mesh="link0"/>
+        
+        <!-- link1 is child of link0; links 1–7 follow Franka Panda / link1作为link0的子体；link1～7取自 Franka Panda -->     
+        <body name="link1_obstacle" pos="0 0 0" quat="1 0 0 0">
+          <inertial pos="0.0119457 0.010524 -0.237182" quat="-0.606188 0.213073 0.674449 0.363668" mass="0.807638" diaginertia="0.001581 0.006519 0.006672"/>
+          <joint name="joint1_obstacle" pos="0 0 0" axis="0 0 1" range="-3.14 3.14" limited="true" damping="8"/>
+          <geom type="mesh" contype="18" conaffinity="20" rgba="0.792157 0.819608 0.933333 1" mesh="link1"/>
+
+          <body name="link2_obstacle" pos="0.095985 0.084721 -0.33006" quat="0.696965 -0.550676 0.443573 -0.119323">
+            <inertial pos="0.0401727 0.0721568 -0.146432" quat="0.571137 0.641765 0.289696 0.421919" mass="0.997394" diaginertia="0.001746 0.008257 0.008302"/>
+            <joint name="joint2_obstacle" pos="0 0 0" axis="0 0 1" range="-2.0 2.0" limited="true" damping="8"/>
+            <geom type="mesh" contype="18" conaffinity="20" rgba="0.792157 0.819608 0.933333 1" mesh="link2"/>
+
+            <body name="link3_obstacle" pos="0.14623 0.26169 -0.12803" quat="0.601287 -0.343558 0.618036 0.372093">
+
+              <inertial pos="-0.0384723 -0.0165653 -0.0312365" quat="0.903155 0.073969 0.412860 0.091578" mass="0.695462" diaginertia="0.001116 0.003690 0.003709"/>
+              <joint name="joint3_obstacle" pos="0 0 0" axis="0 0 -1" range="-2.5 2.5" limited="true" damping="6"/>
+              <geom type="mesh" contype="18" conaffinity="20" rgba="0.792157 0.819608 0.933333 1" mesh="link3"/>
+              <body name="link4_obstacle" pos="-0.0825 0.10162 0.019058" quat="-0.40676 0.406755 -0.578404 -0.578399">
+
+                <inertial pos="-0.0546266 -0.0258059 -0.083502" quat="0.971082 0.027741 -0.105972 0.212132" mass="0.788121" diaginertia="0.001208 0.004290 0.004318"/>
+                <joint name="joint4_obstacle" pos="0 0 0" axis="0 0 -1" range="-2.0 2.0" limited="true" damping="6"/>
+                <geom type="mesh" contype="18" conaffinity="20" rgba="0.792157 0.819608 0.933333 1" mesh="link4"/>
+                <body name="link5_obstacle" pos="-0.043804 -0.073358 -0.10152" quat="0.126867 0.703939 -0.0668617 0.695632">
+
+                  <inertial pos="-0.00622206 0.0645374 -0.263644" quat="0.703851 0.135681 -0.693583 -0.071608" mass="0.304109" diaginertia="0.000430 0.002743 0.002969"/>
+                  <joint name="joint5_obstacle" pos="0 0 0" axis="0 0 1" range="-2.8 2.8" limited="true" damping="4"/>
+                  <geom type="mesh" contype="18" conaffinity="20" rgba="0.792157 0.819608 0.933333 1" mesh="link5"/>
+                  <body name="link6_obstacle" pos="-0.011814 0.12606 -0.34311" quat="0.0330072 0.0330074 -0.706337 -0.706335">
+
+                    <inertial pos="-0.064034 -0.00953132 -0.135025" quat="0.998633 0.010357 0.019789 0.047264" mass="0.230988" diaginertia="0.000236 0.000413 0.000524"/>
+                    <joint name="joint6_obstacle" pos="0 0 0" axis="0 0 1" range="-3.14 3.14" limited="true" damping="2"/>
+                    <geom type="mesh" contype="18" conaffinity="20" rgba="0.25098 0.25098 0.25098 1" mesh="link6"/>
+                    <body name="link7_obstacle" pos="-0.087521 -0.11808 -0.12661" quat="0.034765 0.0313796 0.706411 -0.70625">
+                      <inertial pos="-0.00611647 -0.00297294 0.0528661" quat="-0.389105 0.596933 -0.379503 -0.590123" mass="0.277615" diaginertia="0.000252 0.001165 0.001195"/>
+                      <joint name="joint7_obstacle" pos="0 0 0" axis="0 0 1" range="-2.96 2.96" limited="true" damping="2"/>
+                      <geom type="mesh" contype="18" conaffinity="20" rgba="1 1 1 1" mesh="link7"/>
+                      
+                      <body name="tip8_obstacle" pos="0 0 0.35">
+                        <!-- Sword tip body; site for world pose queries / 剑尖 body；site 用于查询世界坐标 (data.site_xpos) -->
+                          <geom name="tip8_geom_obstacle" contype="8" conaffinity="3" type="sphere" size="0.005" pos="0 0 0" rgba="0 1 0 1"/>
+                          <site name="tip8_obstacle" pos="0 0 0" size="0.01" rgba="0 1 0 1"/>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- Wheel joints also need damping / 轮子关节也需要阻尼 -->
+      <!-- 四个轮子inertial quat="1.000000 -0.000000 0.000000 0.000000" mass="..." diaginertia="0.042568 0.042568 0.057524" -->
+
+      <body name="link01_obstacle" pos="0.175 -0.3 -0.125" quat="0.499998 0.5 0.5 -0.500002">
+        <inertial pos="0 0 -0.075" quat="1.000000 -0.000000 0.000000 0.000000" mass="7.36311" diaginertia="0.042568 0.042568 0.057524"/>
+        <joint name="joint01_obstacle" pos="0 0 0" axis="0 0 -1" limited="false" damping="0.5"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="link01"/>
+      </body>
+      <body name="link02_obstacle" pos="0.175 0.3 -0.125" quat="0.499998 0.5 0.5 -0.500002">
+        <inertial pos="0 0 -0.075" quat="1.000000 -0.000000 0.000000 0.000000" mass="7.36311" diaginertia="0.042568 0.042568 0.057524"/>
+        <joint name="joint02_obstacle" pos="0 0 0" axis="0 0 -1" limited="false" damping="0.5"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="link02"/>
+      </body>
+      <body name="link03_obstacle" pos="-0.175 0.3 -0.125" quat="0.499998 0.5 0.5 -0.500002">
+        <inertial pos="0 0 -0.075" quat="1.000000 -0.000000 0.000000 0.000000" mass="7.36311" diaginertia="0.042568 0.042568 0.057524"/>
+        <joint name="joint03_obstacle" pos="0 0 0" axis="0 0 1" limited="false" damping="0.5"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="link03"/>
+      </body>
+      <body name="link04_obstacle" pos="-0.175 -0.15 -0.125" quat="0.499998 0.5 0.5 -0.500002">
+        <inertial pos="0 0 0.075" quat="1.000000 -0.000000 0.000000 0.000000" mass="7.36311" diaginertia="0.042568 0.042568 0.057524"/>
+        <joint name="joint04_obstacle" pos="0 0 0" axis="0 0 1" limited="false" damping="0.5"/>
+        <geom type="mesh" rgba="1 1 1 1" mesh="link04"/>
+      </body>
+    </body>
+
+  </worldbody>
+  <sensor>
+  <!-- Agent joint positions (8D: 7 joints + 1 slider) 
+  / 代理关节角度 (8 维：7 关节 + 1 滑台) -->
+  <jointpos name="s_j1_agent" joint="joint1_agent"/>
+  <jointpos name="s_j2_agent" joint="joint2_agent"/>
+  <jointpos name="s_j3_agent" joint="joint3_agent"/>
+  <jointpos name="s_j4_agent" joint="joint4_agent"/>
+  <jointpos name="s_j5_agent" joint="joint5_agent"/>
+  <jointpos name="s_j6_agent" joint="joint6_agent"/>
+  <jointpos name="s_j7_agent" joint="joint7_agent"/>
+  <jointpos name="s_slider_agent" joint="slide_x_agent"/>
+  
+  <!-- Agent end-effector position (3D) / 代理末端执行器位置 (3 维) -->
+  <framepos name="s_ee_pos_agent" objtype="site" objname="tip8_agent"/>
+
+  <!-- Agent base position (via site, adjustable) (3D) 
+  / 代理基座位置（通过 site，可调）(3 维) -->
+  <framepos name="s_base_pos_agent" objtype="site" objname="key_site_agent"/>
+  
+  <!-- Obstacle joint positions (7D) / 障碍臂关节角度 (7 维) -->
+  <jointpos name="s_j1_obs" joint="joint1_obstacle"/>
+  <jointpos name="s_j2_obs" joint="joint2_obstacle"/>
+  <jointpos name="s_j3_obs" joint="joint3_obstacle"/>
+  <jointpos name="s_j4_obs" joint="joint4_obstacle"/>
+  <jointpos name="s_j5_obs" joint="joint5_obstacle"/>
+  <jointpos name="s_j6_obs" joint="joint6_obstacle"/>
+  <jointpos name="s_j7_obs" joint="joint7_obstacle"/>
+  <jointpos name="s_slider_obs" joint="slide_x_obstacle"/>
+
+  <!-- Obstacle end-effector position (3D) / 障碍臂末端执行器位置 (3 维) -->
+  <framepos name="s_ee_pos_obs" objtype="site" objname="tip8_obstacle"/>
+
+  <!-- Obstacle base position (via site, adjustable) (3D) 
+  / 障碍臂基座位置（通过 site，可调）(3 维) -->
+  <framepos name="s_base_pos_obs" objtype="site" objname="key_site_obstacle"/>
+  
+  <!-- Collision detection handled in Python via sim.data.contact using contype/conaffinity 
+  / 碰撞检测在 Python 侧通过 sim.data.contact + contype/conaffinity 处理 -->
+  
+</sensor>
+  
+<actuator>
+    <!-- Actions vs torque motors: use PD/IK in Python to map position-like actions to torques (software servo) 
+    / 动作与力矩电机：在 Python 用 PD/IK 将位置式动作映射为力矩（软件伺服） -->
+    <motor name="slider_agent" joint="slide_x_agent" gear="500"/>    
+    <motor name="m1_agent" joint="joint1_agent" gear="100"/>
+    <motor name="m2_agent" joint="joint2_agent" gear="100"/>
+    <motor name="m3_agent" joint="joint3_agent" gear="100"/>
+    <motor name="m4_agent" joint="joint4_agent" gear="100"/>
+    <motor name="m5_agent" joint="joint5_agent" gear="100"/>
+    <motor name="m6_agent" joint="joint6_agent" gear="100"/>
+    <motor name="m7_agent" joint="joint7_agent" gear="100"/>
+    
+    <motor name="slider_obstacle" joint="slide_x_obstacle" gear="500"/>
+    <motor name="m1_obs" joint="joint1_obstacle" gear="100"/>
+    <motor name="m2_obs" joint="joint2_obstacle" gear="100"/>
+    <motor name="m3_obs" joint="joint3_obstacle" gear="100"/>
+    <motor name="m4_obs" joint="joint4_obstacle" gear="100"/>
+    <motor name="m5_obs" joint="joint5_obstacle" gear="100"/>
+    <motor name="m6_obs" joint="joint6_obstacle" gear="100"/>
+    <motor name="m7_obs" joint="joint7_obstacle" gear="100"/>
+  </actuator>
+ 
+</mujoco>
